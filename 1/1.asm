@@ -1,0 +1,8 @@
+mov ax,0x30
+mov dx,0xc0
+add ax,dx
+
+;前面一共是8个字节,还差504个字节,除去末尾的特殊结束记号0x55,0xAA
+times 502 db 0
+db 0x55
+db 0xAA
