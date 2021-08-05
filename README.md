@@ -4,7 +4,7 @@
 
 ### 	参考教程:https://www.bilibili.com/video/BV1xE411N74T
 
-### 	笔记:个人博客
+### 	笔记:[个人博客](http://www.busizhiya.xyz/)
 
 本git用于学习过程中的代码分享,笔记记录,不定时更新
 
