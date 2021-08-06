@@ -1,0 +1,87 @@
+     1 00000000 B800B8                  mov ax,0xB800
+     2 00000003 8EC0                    mov es,ax;设置显存段段es中
+     3                                  
+     4                                  ;输出offset:到屏幕上
+     5 00000005 26C60600006F            mov byte [es:0x00],'o'
+     6 0000000B 26C606010007            mov byte [es:0x01],0x07
+     7                                  
+     8 00000011 26C606020066            mov byte [es:0x02],'f'
+     9 00000017 26C606030007            mov byte [es:0x03],0x07
+    10                                  
+    11 0000001D 26C606040066            mov byte [es:0x04],'f'
+    12 00000023 26C606050007            mov byte [es:0x05],0x07
+    13                                  
+    14 00000029 26C606060073            mov byte [es:0x06],'s'
+    15 0000002F 26C606070007            mov byte [es:0x07],0x07
+    16                                  
+    17 00000035 26C606080065            mov byte [es:0x08],'e'
+    18 0000003B 26C606090007            mov byte [es:0x09],0x07
+    19                                  
+    20 00000041 26C6060A0074            mov byte [es:0x0a],'t'
+    21 00000047 26C6060B0007            mov byte [es:0x0b],0x07
+    22                                  
+    23 0000004D 26C6060C003A            mov byte [es:0x0c],':'
+    24 00000053 26C6060D0007            mov byte [es:0x0d],0x07
+    25                                  
+    26 00000059 8CC8                    mov ax,cs
+    27 0000005B 8ED8                    mov ds,ax;从现在开始,程序的代码段就加载到ds数据段了
+    28                                  
+    29 0000005D B8[5D00]                offset: mov ax,offset;随便取一个offset,就以当前这条指令的汇编地址位offset吧~
+    30 00000060 BB0A00                  mov bx,10;除数位10,存在bl中
+    31                                  
+    32                                  ;计算
+    33 00000063 31D2                    xor dx,dx;dx清零
+    34 00000065 F7F3                    div bx;16位除法
+    35 00000067 8816[D97C]              mov [0x7c00+data+0x00],dl;65535%10<10,直接用dl就可以啦
+    36                                  
+    37 0000006B 31D2                    xor dx,dx
+    38 0000006D F7F3                    div bx
+    39 0000006F 8816[DA7C]              mov [0x7c00+data+0x01],dl;		十位
+    40                                  
+    41 00000073 31D2                    xor dx,dx
+    42 00000075 F7F3                    div bx
+    43 00000077 8816[DB7C]              mov [0x7c00+data+0x02],dl;		百位
+    44                                  
+    45 0000007B 31D2                    xor dx,dx
+    46 0000007D F7F3                    div bx
+    47 0000007F 8816[DC7C]              mov [0x7c00+data+0x03],dl;		千位
+    48                                  
+    49 00000083 31D2                    xor dx,dx
+    50 00000085 F7F3                    div bx
+    51 00000087 8816[DD7C]              mov [0x7c00+data+0x04],dl;		万位
+    52                                  
+    53                                  
+    54                                  ;输出
+    55 0000008B A0[DD7C]                mov al,[0x7c00+data+0x04]
+    56 0000008E 0430                    add al,'0'
+    57 00000090 26A20E00                mov [es:0x0e],al
+    58 00000094 26C6060F0074            mov byte [es:0x0f],0_111_0_100B
+    59                                  
+    60 0000009A A0[DC7C]                mov al,[0x7c00+data+0x03]
+    61 0000009D 0430                    add al,'0'
+    62 0000009F 26A20E00                mov [es:0x0e],al
+    63 000000A3 26C6060F0074            mov byte [es:0x0f],0_111_0_100B
+    64                                  
+    65 000000A9 A0[DB7C]                mov al,[0x7c00+data+0x02]
+    66 000000AC 0430                    add al,'0'
+    67 000000AE 26A21000                mov [es:0x10],al
+    68 000000B2 26C606110074            mov byte [es:0x11],0_111_0_100B
+    69                                  
+    70 000000B8 A0[DA7C]                mov al,[0x7c00+data+0x01]
+    71 000000BB 0430                    add al,'0'
+    72 000000BD 26A21200                mov [es:0x12],al
+    73 000000C1 26C606130074            mov byte [es:0x13],0_111_0_100B
+    74                                  
+    75 000000C7 A0[D97C]                mov al,[0x7c00+data+0x00]
+    76 000000CA 0430                    add al,'0'
+    77 000000CC 26A21400                mov [es:0x14],al
+    78 000000D0 26C606150074            mov byte [es:0x15],0_111_0_100B
+    79                                  
+    80                                  ;无限循环
+    81 000000D6 E9FDFF                  inf:jmp near inf
+    82                                  
+    83                                  data:
+    84 000000D9 00<rep 5h>              	times 5 db 0;开辟5个bytes的空间存数字
+    85                                  
+    86 000000DE 00<rep 120h>            times 510-($-$$) db 0;填补0
+    87 000001FE 55AA                    dw 0xAA55
