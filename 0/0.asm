@@ -1,4 +1,4 @@
-mov ax,21015
-mov bl,10
-div bl
-and cl,0xf0
+cmp ax,bx
+jg lbb
+je lbz
+jl lbl

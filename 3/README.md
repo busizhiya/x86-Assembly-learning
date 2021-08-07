@@ -18,7 +18,7 @@
 
 ​	数据段的开辟与使用
 
-## Code
+## Code:
 
 ```assembly
 mov ax,0xB800
@@ -114,7 +114,7 @@ dw 0xAA55;新学会的dw~
 
 ![截屏2021-08-06 下午1.13.02](https://tva1.sinaimg.cn/large/008i3skNly1gt6zrmmbtuj316b0u0jv6.jpg)
 
-## Tricks
+## Tricks:
 
 1.记住,永远要小心不要让程序执行到你的数据段的内容!
 

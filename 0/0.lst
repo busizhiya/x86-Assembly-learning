@@ -1,4 +1,4 @@
-     1 00000000 B81752                  mov ax,21015
-     2 00000003 B30A                    mov bl,10
-     3 00000005 F6F3                    div bl
-     4 00000007 80E1F0                  and cl,0xf0
+     1 00000000 01<rep 5h>              times 5 db 1
+     2                                  off:
+     3 00000005 01<rep 5h>              times 5 db 1
+     4 0000000A BB[0500]                mov bx,off
