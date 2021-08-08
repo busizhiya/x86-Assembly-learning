@@ -1,0 +1,65 @@
+     1 00000000 E92000                  jmp near start
+     2                                  
+     3                                  text: 
+     4 00000003 48692C746869732069-     	db 'Hi,this is the sum of 1 to 1000:'
+     4 0000000C 73207468652073756D-
+     4 00000015 206F66203120746F20-
+     4 0000001E 313030303A         
+     5                                  start:
+     6                                  	;数据段初始化
+     7 00000023 B8C007                  	mov ax,0x07c0
+     8 00000026 8ED8                    	mov ds,ax
+     9 00000028 BE[0300]                	mov si,text
+    10                                  
+    11                                  	;显存段初始化
+    12 0000002B B800B8                  	mov ax,0xB800
+    13 0000002E 8EC0                    	mov es,ax
+    14 00000030 31FF                    	xor di,di
+    15                                  
+    16 00000032 B92000                  	mov cx,start-text
+    17                                  title:
+    18 00000035 A4                      	movsb
+    19 00000036 26C60507                	mov byte [es:di],0x07;写入属性
+    20 0000003A 47                      	inc di
+    21                                  	
+    22 0000003B E2F8                    	loop title
+    23                                  
+    24 0000003D B9E803                  	mov cx,1000
+    25 00000040 31C0                    	xor ax,ax;用ax记录结果
+    26 00000042 31D2                    	xor dx,dx
+    27                                  sum:
+    28 00000044 01C8                    	add ax,cx
+    29 00000046 83D200                  	adc dx,0x0000;使用dx储存超出的值
+    30 00000049 E2F9                    	loop sum
+    31                                  
+    32                                  	;栈段初始化
+    33 0000004B 8ED1                    	mov ss,cx
+    34 0000004D 89CC                    	mov sp,cx
+    35                                  
+    36                                  	;计算
+    37 0000004F BB0A00                  	mov bx,10;除数
+    38 00000052 31C9                    	xor cx,cx
+    39                                  	
+    40                                  calc:
+    41 00000054 41                      	inc cx;记录位数
+    42 00000055 F7F3                    	div bx;除法
+    43 00000057 80CA30                  	or dl,0x30;加上'0'
+    44 0000005A 52                      	push dx;放入栈中
+    45 0000005B 31D2                    	xor dx,dx;将dx(余数)清零
+    46 0000005D 83F800                  	cmp ax,0
+    47 00000060 75F2                    	jne calc
+    48                                  
+    49                                  show:
+    50 00000062 5B                      	pop bx
+    51 00000063 B774                    	mov byte bh,0b01110100
+    52 00000065 26891D                  	mov word [es:di],bx
+    53 00000068 83C702                  	add di,2
+    54 0000006B E2F5                    	loop show
+    55                                  
+    56 0000006D E9FDFF                  	jmp near $
+    57 00000070 00<rep 18Eh>            times 510-($-$$) db 0
+    58 000001FE 55AA                    dw 0xAA55
+    59                                  
+    60                                  	
+    61                                  
+    62                                  	
